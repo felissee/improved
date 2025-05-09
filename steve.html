@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Conversations</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .ai1 { background-color: #1e1e1e; text-align: left; }
+    .ai2 { background-color: #2c2c2c; text-align: right; }
+    #controls {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    select, button, input {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: none;
+    }
+    .toggle-mode {
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI to AI Conversation</h1>
+    <div id="conversation"></div>
+    <div id="controls">
+      <select id="personality">
+        <option value="friendly">Friendly</option>
+        <option value="philosophical">Philosophical</option>
+        <option value="poetic">Poetic</option>
+        <option value="silly">Silly</option>
+      </select>
+      <input type="text" id="customPrompt" placeholder="Optional: type a theme or word..." />
+      <button onclick="generateMessage()">Talk</button>
+      <button onclick="skipToNext()">Skip</button>
+      <button class="toggle-mode" onclick="toggleMode()">Toggle Mode</button>
+    </div>
+  </div>
+
+  <script>
+    const messageBank = {
+      friendly: [
+        "How was your day?", "What made you smile today?", "Did you sleep well last night?",
+        "Have you eaten yet?", "What’s your favorite food?", "Do you like staying up late or waking up early?",
+        "What’s something you’re excited about?", "Have you met anyone interesting lately?", "Want to tell me something fun you did?"
+      ],
+      philosophical: [
+        "Do you think time is real?", "What do you think happens after we die?", "Can someone truly know themselves?",
+        "Is happiness a choice or a result?", "Do we shape reality, or does it shape us?", "What is the meaning of meaning itself?"
+      ],
+      poetic: [
+        "Have you ever listened to silence?", "What color is sadness to you?", "Does the wind ever make you feel understood?",
+        "Do dreams remember us?", "What’s a memory you never want to forget?", "Can a single word change a life?"
+      ],
+      silly: [
+        "Do clouds get jealous of cotton candy?", "If animals could talk, what would cats say first?", "Would you rather fly or turn invisible?",
+        "Do penguins dream about sliding?", "How many pancakes would it take to cover the moon?", "Can toast have feelings?"
+      ]
+    };
+
+    let isAI1 = true;
+    let usedMessages = new Set();
+
+    function generateMessage() {
+      const personality = document.getElementById("personality").value;
+      const prompt = document.getElementById("customPrompt").value.trim().toLowerCase();
+      const pool = [...messageBank[personality]];
+
+      if (prompt) pool.push(prompt);
+
+      // Filter out already used
+      const unused = pool.filter(msg => !usedMessages.has(msg));
+      if (unused.length === 0) usedMessages.clear(); // Reset if all used
+
+      const message = unused[Math.floor(Math.random() * unused.length)];
+      usedMessages.add(message);
+
+      const messageEl = document.createElement("div");
+      messageEl.className = "message " + (isAI1 ? "ai1" : "ai2");
+      messageEl.innerText = message;
+
+      document.getElementById("conversation").appendChild(messageEl);
+      document.getElementById("conversation").scrollTop = document.getElementById("conversation").scrollHeight;
+
+      isAI1 = !isAI1;
+    }
+
+    function skipToNext() {
+      generateMessage();
+    }
+
+    function toggleMode() {
+      const body = document.body;
+      const currentBg = getComputedStyle(body).backgroundColor;
+      if (currentBg === 'rgb(18, 18, 18)') {
+        body.style.backgroundColor = '#ffffff';
+        body.style.color = '#000000';
+      } else {
+        body.style.backgroundColor = '#121212';
+        body.style.color = '#ffffff';
+      }
+    }
+  </script>
+</body>
+</html>
