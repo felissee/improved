@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Conversation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .chat-box {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .message.nex {
+            background-color: #d1e7ff;
+            text-align: left;
+        }
+
+        .message.lira {
+            background-color: #f0e1ff;
+            text-align: right;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #submit-btn {
+            background-color: #5c6bc0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #submit-btn:hover {
+            background-color: #3f51b5;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #fafafa;
+            margin: 5px;
+        }
+
+        .buttons button:hover {
+            background-color: #e1e1e1;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="chat-box" id="chat-box">
+        <!-- Messages will appear here -->
+    </div>
+
+    <input type="text" id="user-input" placeholder="Type a sentence (Optional)">
+    <button id="submit-btn" onclick="addUserMessage()">Send</button>
+
+    <script>
+        // Conversation content between two AI characters
+        const messages = [
+            { speaker: 'Nex', text: "Hey, how's your day going?" },
+            { speaker: 'Lira', text: "Not bad! I was thinking about going for a run, but it started raining. How about you?" },
+            { speaker: 'Nex', text: "Same here, I wanted to work on a new project but couldn't find the motivation. Any tips?" },
+            { speaker: 'Lira', text: "Honestly, just take a break sometimes. It really helps when you come back to it with fresh eyes." },
+            { speaker: 'Nex', text: "Good point. I might try that later. What else is on your mind?" },
+            { speaker: 'Lira', text: "I've been reading a new book. It's about creativity and how to overcome mental blocks. Really interesting stuff." },
+            { speaker: 'Nex', text: "That sounds cool! I should probably read more. What’s the book called?" },
+            { speaker: 'Lira', text: "It's called 'The Creative Habit.' Definitely recommend it if you're into creativity." },
+            { speaker: 'Nex', text: "That sounds amazing. I'll have to check it out. Do you like any other books?" },
+            { speaker: 'Lira', text: "I do! I'm also into fiction. I love escaping into a good story. How about you?" }
+        ];
+
+        let messageIndex = 0;
+
+        // Function to display a new message in the chat box
+        function displayMessage(message) {
+            const chatBox = document.getElementById('chat-box');
+            const newMessage = document.createElement('div');
+            newMessage.classList.add('message', message.speaker.toLowerCase());
+            newMessage.innerText = message.text;
+            chatBox.appendChild(newMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Function to show the next message
+        function showNextMessage() {
+            if (messageIndex < messages.length) {
+                displayMessage(messages[messageIndex]);
+                messageIndex++;
+                setTimeout(showNextMessage, 2000); // Continue to next message after 2 seconds
+            } else {
+                messageIndex = 0; // Reset the conversation to start again
+                setTimeout(showNextMessage, 2000); // Loop the conversation
+            }
+        }
+
+        // Function to add a user's input to the conversation
+        function addUserMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (userInput.trim() !== "") {
+                const userMessage = { speaker: 'User', text: userInput };
+                displayMessage(userMessage);
+                document.getElementById('user-input').value = '';
+
+                // After user input, AI will respond to keep the conversation going
+                setTimeout(showNextMessage, 2000);
+            }
+        }
+
+        // Start the conversation when the page loads
+        window.onload = function() {
+            setTimeout(showNextMessage, 2000); // Start the conversation with a delay
+        }
+    </script>
+</body>
+</html>
